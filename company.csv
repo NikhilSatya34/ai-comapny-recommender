@@ -1,0 +1,53 @@
+company_name,eligible_departments,job_role,min_cgpa,preferred_domain,package_lpa,company_level
+Infosys,"CSE,CSE-DS,AIML,AIDS,ECE,EEE","Frontend Developer",6.5,Software,6,LOW
+Infosys,"CSE,CSE-DS,AIML,AIDS","Backend Developer",6.5,Software,7,LOW
+Infosys,"CSE,CSE-DS","Data Analyst",6.5,Data,7,LOW
+
+TCS,"CSE,CSE-DS,ECE,EEE,MECH,CIVIL","Frontend Developer",6.0,Software,5,LOW
+TCS,"CSE,CSE-DS","Backend Developer",6.0,Software,6,LOW
+TCS,"CSE-DS,AIML,AIDS","Data Analyst",6.0,Data,7,LOW
+
+Wipro,"CSE,CSE-DS,ECE,EEE","Frontend Developer",6.0,Software,5,LOW
+Wipro,"CSE,CSE-DS","Backend Developer",6.0,Software,6,LOW
+
+Cognizant,"CSE,CSE-DS,AIDS,ECE","Full Stack Developer",6.5,Software,7,LOW
+Capgemini,"CSE,CSE-DS,ECE,EEE","Full Stack Developer",6.0,Software,6,LOW
+
+Zoho,"CSE,CSE-DS","Frontend Developer",7.0,Software,8,MID
+Zoho,"CSE,CSE-DS","Backend Developer",7.0,Software,9,MID
+Zoho,"CSE-DS,AIML","Data Engineer",7.0,Data,10,MID
+
+Freshworks,"CSE,CSE-DS","Full Stack Developer",7.0,Software,10,MID
+Freshworks,"CSE,CSE-DS","Backend Developer",7.0,Software,11,MID
+
+Paytm,"CSE,CSE-DS","Backend Developer",7.5,FinTech,12,MID
+PhonePe,"CSE,CSE-DS","Backend Developer",7.5,FinTech,14,MID
+Razorpay,"CSE,CSE-DS","Backend Developer",7.5,FinTech,15,MID
+
+Accenture,"CSE,CSE-DS,ECE,EEE,MECH,CIVIL","Software Engineer",6.5,IT,6,LOW
+Accenture,"CSE,CSE-DS","Data Analyst",6.5,Data,8,MID
+
+Bosch,"ECE,EEE,MECH","Embedded Engineer",7.0,Embedded,10,MID
+Bosch,"MECH","Mechanical Design Engineer",7.0,Core,9,MID
+
+Siemens,"ECE,EEE,MECH,CIVIL","Core Engineer",7.0,Industrial,10,MID
+ABB,"EEE,MECH","Power Engineer",7.0,Energy,9,MID
+Schneider Electric,"EEE,MECH","Energy Systems Engineer",6.5,Energy,8,MID
+
+Tata Motors,"MECH","Automobile Engineer",6.5,Automobile,7,LOW
+Mahindra & Mahindra,"MECH","Automobile Engineer",6.5,Automobile,7,LOW
+
+L&T,"CIVIL,MECH,EEE","Site Engineer",6.5,Construction,7,LOW
+L&T,"CIVIL","Planning Engineer",6.5,Infrastructure,8,MID
+
+NCC,"CIVIL","Site Engineer",6.0,Construction,6,LOW
+Shapoorji Pallonji,"CIVIL","Civil Engineer",6.5,Construction,7,LOW
+
+ISRO,"ECE,EEE,MECH","Engineer Trainee",7.5,Space,10,MID
+DRDO,"ECE,EEE,MECH","Scientist B",7.5,Defense,11,MID
+
+Intel,"ECE,EEE","Graduate Engineer",8.0,Hardware,15,HIGH
+Qualcomm,"ECE,EEE","Embedded Engineer",8.0,Semiconductor,14,HIGH
+
+Amazon (India),"CSE,CSE-DS","Software Engineer I",7.5,Software,15,HIGH
+Microsoft (India),"CSE,CSE-DS","Software Engineer",8.0,Software,15,HIGH
