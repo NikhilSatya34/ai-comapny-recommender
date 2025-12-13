@@ -7,6 +7,16 @@ st.set_page_config(
     layout="wide"
 )
 
+# -------------------- SESSION STATE --------------------
+if "submitted" not in st.session_state:
+    st.session_state.submitted = False
+
+if "show_profile" not in st.session_state:
+    st.session_state.show_profile = True
+
+if "hide_sidebar" not in st.session_state:
+    st.session_state.hide_sidebar = False
+
 # -------------------- SIDEBAR AUTO HIDE CSS --------------------
 if st.session_state.hide_sidebar:
     st.markdown(
@@ -22,16 +32,6 @@ if st.session_state.hide_sidebar:
         """,
         unsafe_allow_html=True
     )
-
-# -------------------- SESSION STATE --------------------
-if "submitted" not in st.session_state:
-    st.session_state.submitted = False
-
-if "show_profile" not in st.session_state:
-    st.session_state.show_profile = True
-    
-if "hide_sidebar" not in st.session_state:
-    st.session_state.hide_sidebar = False
 
 # -------------------- LOAD DATA --------------------
 df = pd.read_csv("company.csv")
@@ -62,10 +62,7 @@ ROLE_CORE_SKILLS = {
     "Mechanical Engineer": ["Problem Solving", "Design Thinking"]
 }
 
-# -------------------- SIDEBAR --------------------
-st.sidebar.markdown("## 👤 Student Profile")
-
-# -------------------- HEADER WITH RIGHT-SIDE BUTTON --------------------
+# -------------------- HEADER WITH RIGHT BUTTON --------------------
 col1, col2 = st.columns([8, 2])
 
 with col1:
@@ -80,11 +77,16 @@ with col1:
 with col2:
     st.markdown("<br>", unsafe_allow_html=True)
     if st.button("👤 Student Profile"):
-        st.session_state.show_profile = not st.session_state.show_profile
+        st.session_state.show_profile = True
+        st.session_state.hide_sidebar = False
+        st.session_state.submitted = False
 
+# -------------------- SIDEBAR --------------------
 submit = False
 
 if st.session_state.show_profile:
+
+    st.sidebar.markdown("## 👤 Student Profile")
 
     department = st.sidebar.selectbox(
         "Department",
@@ -129,34 +131,18 @@ if st.session_state.show_profile:
 
     submit = st.sidebar.button("🔍 Get Recommendations")
 
-# -------------------- HEADER --------------------
-st.markdown(
-    """
-    <h1 style='text-align:center;'>🎓 AI Career Recommendation System</h1>
-    <p style='text-align:center;'>Department-aware • Role-based • Skill-driven</p>
-    """,
-    unsafe_allow_html=True
-)
-
 # -------------------- AFTER SUBMIT --------------------
 if submit:
     st.session_state.submitted = True
     st.session_state.show_profile = False
-    st.session_state.hide_sidebar = True   # 👈 THIS hides sidebar
+    st.session_state.hide_sidebar = True
 
 # ==================== RESULTS PAGE ====================
 if st.session_state.submitted:
 
-    # -------- SAFE AVERAGE (NO ZERO DIVISION) --------
-    avg_tech = (
-        sum(tech_ratings.values()) / len(tech_ratings)
-        if len(tech_ratings) > 0 else 3
-    )
-
-    avg_core = (
-        sum(core_ratings.values()) / len(core_ratings)
-        if len(core_ratings) > 0 else 3
-    )
+    # ---- SAFE AVERAGES ----
+    avg_tech = sum(tech_ratings.values()) / len(tech_ratings) if tech_ratings else 3
+    avg_core = sum(core_ratings.values()) / len(core_ratings) if core_ratings else 3
 
     final_score = (
         (cgpa / 10) * 0.30 +
@@ -191,18 +177,15 @@ if st.session_state.submitted:
             (df["eligible_departments"].str.contains(department))
         ]
 
-    df_final = df_filtered.head(5)
+    df_final = df_filtered.head(5).copy()
 
-    # -------------------- COMPANY TABLE --------------------
+    # -------------------- COMPANY TABLE WITH S.NO --------------------
     st.subheader("🏢 Company Recommendations")
+
     df_table = df_final[["company_name", "job_role", "company_level"]].copy()
     df_table.insert(0, "S.No", range(1, len(df_table) + 1))
 
-    st.dataframe(
-    df_table,
-    use_container_width=True
-    )
-
+    st.dataframe(df_table, use_container_width=True)
 
     # -------------------- MARKET INSIGHTS --------------------
     st.markdown("## 🚀 Role-Based Market Insights")
@@ -231,4 +214,3 @@ st.markdown(
     "<p style='text-align:center;'>Built with ❤️ using Data Science & AI</p>",
     unsafe_allow_html=True
 )
-
