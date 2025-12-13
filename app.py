@@ -1,42 +1,40 @@
 import streamlit as st
 import pandas as pd
 
-# -----------------------------
+# -------------------------------------------------
 # PAGE CONFIG
-# -----------------------------
+# -------------------------------------------------
 st.set_page_config(
     page_title="AI Career Recommendation System",
     page_icon="🎓",
     layout="wide"
 )
 
-# -----------------------------
+# -------------------------------------------------
 # LOAD DATA
-# -----------------------------
-df = pd.read_csv("company.csv")
+# -------------------------------------------------
+company_df = pd.read_csv("company.csv")
+role_df = pd.read_csv("role_market_data.csv")
 
-# -----------------------------
-# HEADER (PROFESSIONAL)
-# -----------------------------
+# -------------------------------------------------
+# HEADER
+# -------------------------------------------------
 st.markdown(
     """
-    <div style="padding:20px 0">
-        <h1 style="text-align:center;color:#0f172a;">
-            🎓 AI Career Recommendation System
-        </h1>
-        <p style="text-align:center;color:#475569;font-size:18px;">
-            Smart • Department-aware • Technology-driven Career Guidance
-        </p>
-    </div>
+    <h1 style="text-align:center;color:#0f172a;">
+        🎓 AI Career Recommendation System
+    </h1>
+    <p style="text-align:center;color:#475569;font-size:18px;">
+        Department-aware • Role-based • Technology-driven Career Guidance
+    </p>
     """,
     unsafe_allow_html=True
 )
-
 st.divider()
 
-# -----------------------------
-# SIDEBAR (USER INPUTS)
-# -----------------------------
+# -------------------------------------------------
+# SIDEBAR INPUTS
+# -------------------------------------------------
 st.sidebar.header("👤 Student Profile")
 
 department = st.sidebar.selectbox(
@@ -44,20 +42,21 @@ department = st.sidebar.selectbox(
     ["CSE", "CSE-DS", "AIML", "AIDS", "ECE", "EEE", "MECH", "CIVIL"]
 )
 
-dept_tech_map = {
-    "CSE": ["Software Development", "Web Development", "Cloud / DevOps", "AI / ML", "Data Science", "FinTech"],
-    "CSE-DS": ["Data Science", "AI / ML", "Cloud / DevOps", "Software Development"],
-    "AIML": ["AI / ML", "Data Science", "Cloud / DevOps"],
-    "AIDS": ["Data Science", "AI / ML", "Software Development"],
-    "ECE": ["Embedded Systems", "Core Engineering", "AI / ML"],
-    "EEE": ["Core Engineering", "Embedded Systems", "Energy Systems"],
-    "MECH": ["Core Engineering", "Automobile", "Manufacturing"],
-    "CIVIL": ["Core Engineering", "Construction", "Infrastructure"]
+# Department → Role mapping
+dept_role_map = {
+    "CSE": ["Frontend Developer", "Backend Developer", "Full Stack Developer"],
+    "CSE-DS": ["Data Scientist", "Backend Developer", "Full Stack Developer"],
+    "AIML": ["ML Engineer", "Data Scientist"],
+    "AIDS": ["Data Scientist"],
+    "ECE": ["Embedded Engineer"],
+    "EEE": ["Power Engineer", "Embedded Engineer"],
+    "MECH": ["Automobile Engineer"],
+    "CIVIL": ["Site Engineer"]
 }
 
-technology = st.sidebar.selectbox(
-    "Interested Technology",
-    dept_tech_map[department]
+job_role = st.sidebar.selectbox(
+    "Interested Role",
+    dept_role_map[department]
 )
 
 cgpa = st.sidebar.slider("CGPA", 5.0, 10.0, 7.0, step=0.1)
@@ -65,53 +64,32 @@ coding_level = st.sidebar.selectbox("Coding Skill Level", ["Low", "Medium", "Hig
 core_skill_level = st.sidebar.selectbox("Core Skill Level", ["Low", "Medium", "High"])
 internship = st.sidebar.selectbox("Internship Completed?", ["Yes", "No"])
 
-st.sidebar.markdown("---")
-recommend_btn = st.sidebar.button("🔍 Recommend Companies")
+recommend_btn = st.sidebar.button("🔍 Recommend Career Options")
 
-# -----------------------------
-# MAIN CONTENT
-# -----------------------------
+# -------------------------------------------------
+# MAIN LOGIC
+# -------------------------------------------------
 if recommend_btn:
 
     # -----------------------------
-    # PROFILE SUMMARY CARD
+    # PROFILE SUMMARY
     # -----------------------------
-    st.markdown(
-        f"""
-        <div style="
-            background:#f8fafc;
-            padding:20px;
-            border-radius:12px;
-            margin-bottom:20px;
-            border:1px solid #e2e8f0;
-        ">
-        <h3>👤 Profile Summary</h3>
-        <ul>
-            <li><b>Department:</b> {department}</li>
-            <li><b>Technology Interest:</b> {technology}</li>
-            <li><b>CGPA:</b> {cgpa}</li>
-            <li><b>Coding Skill:</b> {coding_level}</li>
-            <li><b>Core Skill:</b> {core_skill_level}</li>
-            <li><b>Internship:</b> {internship}</li>
-        </ul>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    st.subheader("👤 Profile Summary")
+    st.write(f"""
+    - **Department:** {department}  
+    - **Role Interested:** {job_role}  
+    - **CGPA:** {cgpa}  
+    - **Coding Skill:** {coding_level}  
+    - **Core Skill:** {core_skill_level}  
+    - **Internship:** {internship}
+    """)
+    st.divider()
 
     # -----------------------------
-    # FILTER BY DEPARTMENT
+    # USER STRENGTH CALCULATION
     # -----------------------------
-    df_dept = df[df["eligible_departments"].str.contains(department)].copy()
-
     level_map = {"Low": 1, "Medium": 2, "High": 3}
-    df_dept["coding_num"] = df_dept["coding_level"].map(level_map)
-    df_dept["core_num"] = df_dept["core_skill_level"].map(level_map)
-    df_dept["intern_num"] = df_dept["internship_required"].map({"No": 0, "Yes": 1})
 
-    # -----------------------------
-    # USER STRENGTH
-    # -----------------------------
     user_strength = (
         (cgpa / 10) * 0.4 +
         (level_map[coding_level] / 3) * 0.3 +
@@ -121,84 +99,102 @@ if recommend_btn:
 
     if user_strength < 0.45:
         user_level = "LOW"
-        st.warning("🔰 Beginner Profile – Startups & service companies recommended")
-        df_filtered = df_dept[df_dept["company_level"] == "LOW"]
-
+        st.warning("🔰 Beginner Profile – Startups & entry-level companies")
     elif user_strength < 0.7:
         user_level = "MEDIUM"
-        st.info("⚡ Intermediate Profile – Growth-focused companies recommended")
-        df_filtered = df_dept[df_dept["company_level"].isin(["LOW", "MID"])]
-
+        st.info("⚡ Intermediate Profile – Growth-focused companies")
     else:
         user_level = "HIGH"
-        st.success("🚀 Advanced Profile – Eligible for all companies")
-        df_filtered = df_dept.copy()
+        st.success("🚀 Advanced Profile – Eligible for top companies")
 
-    # -----------------------------
-    # TECHNOLOGY FILTER
-    # -----------------------------
-    tech_domain_map = {
-        "AI / ML": ["AI", "Data"],
-        "Data Science": ["Data", "AI"],
-        "Web Development": ["Software", "Ecommerce"],
-        "Software Development": ["Software", "SaaS"],
-        "Cloud / DevOps": ["Cloud"],
-        "Embedded Systems": ["Embedded", "Hardware", "Semiconductor"],
-        "Core Engineering": ["Automobile", "Construction", "Infrastructure", "Industrial", "Energy"],
-        "FinTech": ["FinTech"],
-        "Automobile": ["Automobile"],
-        "Manufacturing": ["Industrial"],
-        "Construction": ["Construction"],
-        "Infrastructure": ["Infrastructure"],
-        "Energy Systems": ["Energy"]
-    }
+    # -------------------------------------------------
+    # COMPANY RECOMMENDATION (GENERAL)
+    # -------------------------------------------------
+    st.subheader("🏢 Company Recommendations")
 
-    df_filtered = df_filtered[
-        df_filtered["preferred_domain"].isin(tech_domain_map[technology])
-    ]
+    df_dept = company_df[
+        company_df["eligible_departments"].str.contains(department)
+    ].copy()
 
-    # -----------------------------
-    # AI MATCH SCORE
-    # -----------------------------
-    df_filtered["match_score"] = (
-        (df_filtered["min_cgpa"] / 10) * 0.35 +
-        (df_filtered["coding_num"] / 3) * 0.30 +
-        (df_filtered["core_num"] / 3) * 0.20 +
-        (df_filtered["intern_num"]) * 0.15
+    if user_level == "LOW":
+        df_dept = df_dept[df_dept["company_level"] == "LOW"]
+    elif user_level == "MEDIUM":
+        df_dept = df_dept[df_dept["company_level"].isin(["LOW", "MID"])]
+
+    df_dept["coding_num"] = df_dept["coding_level"].map(level_map)
+    df_dept["core_num"] = df_dept["core_skill_level"].map(level_map)
+    df_dept["intern_num"] = df_dept["internship_required"].map({"No": 0, "Yes": 1})
+
+    df_dept["match_score"] = (
+        (df_dept["min_cgpa"] / 10) * 0.35 +
+        (df_dept["coding_num"] / 3) * 0.30 +
+        (df_dept["core_num"] / 3) * 0.20 +
+        (df_dept["intern_num"]) * 0.15
     )
 
-    df_filtered["match_percentage"] = (df_filtered["match_score"] * 100).round(2)
-    top5 = df_filtered.sort_values("match_score", ascending=False).head(5)
+    df_dept["match_percentage"] = (df_dept["match_score"] * 100).round(2)
 
-    # -----------------------------
-    # RESULTS DISPLAY (CARDS)
-    # -----------------------------
-    st.subheader("🏆 Top Recommended Companies")
+    top_companies = df_dept.sort_values(
+        "match_score", ascending=False
+    ).head(5)
 
-    cols = st.columns(2)
-    for idx, row in enumerate(top5.itertuples()):
-        with cols[idx % 2]:
+    st.dataframe(
+        top_companies[
+            ["company_name", "match_percentage", "package_lpa", "company_level"]
+        ],
+        use_container_width=True
+    )
+
+    st.divider()
+
+    # -------------------------------------------------
+    # ROLE-BASED MARKET INSIGHTS (KEY FEATURE)
+    # -------------------------------------------------
+    st.subheader("🧑‍💻 Role-Based Market Insights")
+
+    role_filtered = role_df[
+        (role_df["job_role"] == job_role) &
+        (role_df["eligible_stream"].str.contains(department))
+    ]
+
+    if role_filtered.empty:
+        st.warning("No role-based data available.")
+    else:
+        for _, row in role_filtered.iterrows():
+            status = row["hiring_status"]
+
+            if status == "Actively Hiring":
+                color = "#22c55e"
+            elif status == "Limited Openings":
+                color = "#facc15"
+            else:
+                color = "#ef4444"
+
             st.markdown(
                 f"""
                 <div style="
-                    background:white;
-                    padding:20px;
-                    border-radius:14px;
                     border:1px solid #e5e7eb;
-                    box-shadow:0 4px 10px rgba(0,0,0,0.05);
-                    margin-bottom:20px;
+                    padding:18px;
+                    border-radius:14px;
+                    margin-bottom:15px;
+                    background:#ffffff;
                 ">
-                <h3>{row.company_name}</h3>
-                <p>🎯 <b>Match:</b> {row.match_percentage}%</p>
-                <p>💰 <b>Package:</b> {row.package_lpa} LPA</p>
+                    <h4>{row['company_name']}</h4>
+                    <p>📌 <b>Hiring Status:</b>
+                       <span style="color:{color};font-weight:bold;">
+                       {status}
+                       </span>
+                    </p>
+                    <p>🎓 <b>Eligible Stream:</b> {row['eligible_stream']}</p>
+                    <p>🛠 <b>Required Technologies:</b> {row['required_technologies']}</p>
                 </div>
                 """,
                 unsafe_allow_html=True
             )
 
-# -----------------------------
+# -------------------------------------------------
 # FOOTER
-# -----------------------------
+# -------------------------------------------------
 st.divider()
 st.markdown(
     "<p style='text-align:center;color:#64748b;'>Built with ❤️ using Data Science & AI</p>",
