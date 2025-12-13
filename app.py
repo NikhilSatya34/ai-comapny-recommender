@@ -2,18 +2,48 @@ import streamlit as st
 import pandas as pd
 
 # -----------------------------
-# Load Dataset
+# PAGE CONFIG
+# -----------------------------
+st.set_page_config(
+    page_title="AI Career Recommendation System",
+    page_icon="🎓",
+    layout="wide"
+)
+
+# -----------------------------
+# LOAD DATA
 # -----------------------------
 df = pd.read_csv("company.csv")
 
-st.set_page_config(page_title="AI Career Recommendation System", layout="centered")
+# -----------------------------
+# HEADER (PROFESSIONAL)
+# -----------------------------
+st.markdown(
+    """
+    <div style="padding:20px 0">
+        <h1 style="text-align:center;color:#0f172a;">
+            🎓 AI Career Recommendation System
+        </h1>
+        <p style="text-align:center;color:#475569;font-size:18px;">
+            Smart • Department-aware • Technology-driven Career Guidance
+        </p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
-st.title("🎓 AI-Based Company Recommendation System")
-st.caption("Department-aware • Technology-driven • Adaptive AI Career Guidance")
+st.divider()
 
 # -----------------------------
-# Department → Technology Mapping
+# SIDEBAR (USER INPUTS)
 # -----------------------------
+st.sidebar.header("👤 Student Profile")
+
+department = st.sidebar.selectbox(
+    "Department",
+    ["CSE", "CSE-DS", "AIML", "AIDS", "ECE", "EEE", "MECH", "CIVIL"]
+)
+
 dept_tech_map = {
     "CSE": ["Software Development", "Web Development", "Cloud / DevOps", "AI / ML", "Data Science", "FinTech"],
     "CSE-DS": ["Data Science", "AI / ML", "Cloud / DevOps", "Software Development"],
@@ -25,63 +55,62 @@ dept_tech_map = {
     "CIVIL": ["Core Engineering", "Construction", "Infrastructure"]
 }
 
-# Technology → Domain Mapping
-tech_domain_map = {
-    "AI / ML": ["AI", "Data"],
-    "Data Science": ["Data", "AI"],
-    "Web Development": ["Software", "Ecommerce"],
-    "Software Development": ["Software", "SaaS"],
-    "Cloud / DevOps": ["Cloud"],
-    "Embedded Systems": ["Embedded", "Hardware", "Semiconductor"],
-    "Core Engineering": ["Automobile", "Construction", "Infrastructure", "Industrial", "Energy"],
-    "FinTech": ["FinTech"],
-    "Automobile": ["Automobile"],
-    "Manufacturing": ["Industrial"],
-    "Construction": ["Construction"],
-    "Infrastructure": ["Infrastructure"],
-    "Energy Systems": ["Energy"]
-}
-
-# -----------------------------
-# User Inputs
-# -----------------------------
-department = st.selectbox(
-    "Select Department",
-    ["CSE", "CSE-DS", "AIML", "AIDS", "ECE", "EEE", "MECH", "CIVIL"]
-)
-
-technology = st.selectbox(
+technology = st.sidebar.selectbox(
     "Interested Technology",
     dept_tech_map[department]
 )
 
-cgpa = st.slider("CGPA", 5.0, 10.0, 7.0, step=0.1)
+cgpa = st.sidebar.slider("CGPA", 5.0, 10.0, 7.0, step=0.1)
+coding_level = st.sidebar.selectbox("Coding Skill Level", ["Low", "Medium", "High"])
+core_skill_level = st.sidebar.selectbox("Core Skill Level", ["Low", "Medium", "High"])
+internship = st.sidebar.selectbox("Internship Completed?", ["Yes", "No"])
 
-coding_level = st.selectbox("Coding Skill Level", ["Low", "Medium", "High"])
-core_skill_level = st.selectbox("Core Skill Level", ["Low", "Medium", "High"])
-internship = st.selectbox("Internship Completed?", ["Yes", "No"])
+st.sidebar.markdown("---")
+recommend_btn = st.sidebar.button("🔍 Recommend Companies")
 
 # -----------------------------
-# Button Action
+# MAIN CONTENT
 # -----------------------------
-if st.button("🔍 Recommend Companies"):
+if recommend_btn:
 
     # -----------------------------
-    # Step 1: Department Filter
+    # PROFILE SUMMARY CARD
+    # -----------------------------
+    st.markdown(
+        f"""
+        <div style="
+            background:#f8fafc;
+            padding:20px;
+            border-radius:12px;
+            margin-bottom:20px;
+            border:1px solid #e2e8f0;
+        ">
+        <h3>👤 Profile Summary</h3>
+        <ul>
+            <li><b>Department:</b> {department}</li>
+            <li><b>Technology Interest:</b> {technology}</li>
+            <li><b>CGPA:</b> {cgpa}</li>
+            <li><b>Coding Skill:</b> {coding_level}</li>
+            <li><b>Core Skill:</b> {core_skill_level}</li>
+            <li><b>Internship:</b> {internship}</li>
+        </ul>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # -----------------------------
+    # FILTER BY DEPARTMENT
     # -----------------------------
     df_dept = df[df["eligible_departments"].str.contains(department)].copy()
 
-    # -----------------------------
-    # Step 2: Numeric Mapping
-    # -----------------------------
     level_map = {"Low": 1, "Medium": 2, "High": 3}
-
-    df_dept.loc[:, "coding_num"] = df_dept["coding_level"].map(level_map)
-    df_dept.loc[:, "core_num"] = df_dept["core_skill_level"].map(level_map)
-    df_dept.loc[:, "intern_num"] = df_dept["internship_required"].map({"No": 0, "Yes": 1})
+    df_dept["coding_num"] = df_dept["coding_level"].map(level_map)
+    df_dept["core_num"] = df_dept["core_skill_level"].map(level_map)
+    df_dept["intern_num"] = df_dept["internship_required"].map({"No": 0, "Yes": 1})
 
     # -----------------------------
-    # Step 3: USER STRENGTH SCORE
+    # USER STRENGTH
     # -----------------------------
     user_strength = (
         (cgpa / 10) * 0.4 +
@@ -92,34 +121,44 @@ if st.button("🔍 Recommend Companies"):
 
     if user_strength < 0.45:
         user_level = "LOW"
+        st.warning("🔰 Beginner Profile – Startups & service companies recommended")
+        df_filtered = df_dept[df_dept["company_level"] == "LOW"]
+
     elif user_strength < 0.7:
         user_level = "MEDIUM"
+        st.info("⚡ Intermediate Profile – Growth-focused companies recommended")
+        df_filtered = df_dept[df_dept["company_level"].isin(["LOW", "MID"])]
+
     else:
         user_level = "HIGH"
-
-    # -----------------------------
-    # Step 4: Adaptive Company Filtering
-    # -----------------------------
-    if user_level == "LOW":
-        df_filtered = df_dept[df_dept["company_level"] == "LOW"]
-        st.warning("🔰 Profile Level: Beginner – Showing startups & low-package companies")
-
-    elif user_level == "MEDIUM":
-        df_filtered = df_dept[df_dept["company_level"].isin(["LOW", "MID"])]
-        st.info("⚡ Profile Level: Intermediate – Showing realistic growth opportunities")
-
-    else:
+        st.success("🚀 Advanced Profile – Eligible for all companies")
         df_filtered = df_dept.copy()
-        st.success("🚀 Profile Level: Advanced – Eligible for all companies")
 
     # -----------------------------
-    # Step 5: Technology Filter
+    # TECHNOLOGY FILTER
     # -----------------------------
-    selected_domains = tech_domain_map[technology]
-    df_filtered = df_filtered[df_filtered["preferred_domain"].isin(selected_domains)]
+    tech_domain_map = {
+        "AI / ML": ["AI", "Data"],
+        "Data Science": ["Data", "AI"],
+        "Web Development": ["Software", "Ecommerce"],
+        "Software Development": ["Software", "SaaS"],
+        "Cloud / DevOps": ["Cloud"],
+        "Embedded Systems": ["Embedded", "Hardware", "Semiconductor"],
+        "Core Engineering": ["Automobile", "Construction", "Infrastructure", "Industrial", "Energy"],
+        "FinTech": ["FinTech"],
+        "Automobile": ["Automobile"],
+        "Manufacturing": ["Industrial"],
+        "Construction": ["Construction"],
+        "Infrastructure": ["Infrastructure"],
+        "Energy Systems": ["Energy"]
+    }
+
+    df_filtered = df_filtered[
+        df_filtered["preferred_domain"].isin(tech_domain_map[technology])
+    ]
 
     # -----------------------------
-    # Step 6: AI Match Scoring
+    # AI MATCH SCORE
     # -----------------------------
     df_filtered["match_score"] = (
         (df_filtered["min_cgpa"] / 10) * 0.35 +
@@ -129,24 +168,39 @@ if st.button("🔍 Recommend Companies"):
     )
 
     df_filtered["match_percentage"] = (df_filtered["match_score"] * 100).round(2)
-
-    # -----------------------------
-    # Step 7: Output
-    # -----------------------------
     top5 = df_filtered.sort_values("match_score", ascending=False).head(5)
 
-    st.subheader("✅ Top Recommended Companies")
-    st.dataframe(
-        top5[["company_name", "match_percentage", "package_lpa"]],
-        use_container_width=True
-    )
+    # -----------------------------
+    # RESULTS DISPLAY (CARDS)
+    # -----------------------------
+    st.subheader("🏆 Top Recommended Companies")
 
-    # -----------------------------
-    # Guidance Message
-    # -----------------------------
-    if user_level == "LOW":
-        st.caption("💡 Improve core skills and internships to unlock mid & high-tier companies.")
-    elif user_level == "MEDIUM":
-        st.caption("💡 Strengthen skills to reach top product-based companies.")
-    else:
-        st.caption("💡 Excellent profile! You are eligible for both startups and top MNCs.")
+    cols = st.columns(2)
+    for idx, row in enumerate(top5.itertuples()):
+        with cols[idx % 2]:
+            st.markdown(
+                f"""
+                <div style="
+                    background:white;
+                    padding:20px;
+                    border-radius:14px;
+                    border:1px solid #e5e7eb;
+                    box-shadow:0 4px 10px rgba(0,0,0,0.05);
+                    margin-bottom:20px;
+                ">
+                <h3>{row.company_name}</h3>
+                <p>🎯 <b>Match:</b> {row.match_percentage}%</p>
+                <p>💰 <b>Package:</b> {row.package_lpa} LPA</p>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+# -----------------------------
+# FOOTER
+# -----------------------------
+st.divider()
+st.markdown(
+    "<p style='text-align:center;color:#64748b;'>Built with ❤️ using Data Science & AI</p>",
+    unsafe_allow_html=True
+)
