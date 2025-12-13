@@ -1,0 +1,79 @@
+company_name,eligible_departments,job_role,min_cgpa,package_lpa,company_level,company_locations
+L&T,CIVIL,Site Engineer,6.5,7,LOW,Chennai|Mumbai|Delhi|Bengaluru
+NCC,CIVIL,Site Engineer,6.0,6,LOW,Hyderabad|Vizag
+Tata Projects,CIVIL,Planning Engineer,7.0,8,MID,Mumbai|Delhi
+Afcons,CIVIL,Site Engineer,6.5,7,LOW,Mumbai|Chennai
+IRCON,CIVIL,Site Engineer,7.0,8,MID,Delhi|Kolkata
+Simplex,CIVIL,Site Engineer,6.0,6,LOW,Kolkata|Patna
+GMR Infra,CIVIL,Site Engineer,7.0,9,MID,Hyderabad|Delhi
+GVPR,CIVIL,Site Engineer,6.0,6,LOW,Hyderabad
+KNR Constructions,CIVIL,Site Engineer,6.0,6,LOW,Hyderabad
+Sobha,CIVIL,Site Engineer,6.5,7,LOW,Bengaluru
+Prestige Group,CIVIL,Site Engineer,6.5,7,LOW,Bengaluru
+DLF,CIVIL,Planning Engineer,7.0,9,MID,Delhi
+Shapoorji Pallonji,CIVIL,Site Engineer,7.0,8,MID,Mumbai
+HCC,CIVIL,Site Engineer,6.5,7,LOW,Mumbai
+PNC Infratech,CIVIL,Site Engineer,6.0,6,LOW,Agra
+MEIL,CIVIL,Site Engineer,6.0,6,LOW,Hyderabad
+Lodha Group,CIVIL,Site Engineer,6.5,7,LOW,Mumbai
+Godrej Properties,CIVIL,Planning Engineer,7.0,9,MID,Mumbai
+Ashoka Buildcon,CIVIL,Site Engineer,6.0,6,LOW,Nashik
+KEC International,CIVIL,Site Engineer,6.5,7,LOW,Mumbai
+Ramco Group,CIVIL,Site Engineer,6.0,6,LOW,Chennai
+NBCC,CIVIL,Planning Engineer,7.0,8,MID,Delhi
+Tata Housing,CIVIL,Site Engineer,6.5,7,LOW,Mumbai
+Capacit’e Infra,CIVIL,Site Engineer,6.0,6,LOW,Mumbai
+PNC Construction,CIVIL,Site Engineer,6.0,6,LOW,Delhi
+
+Infosys,CSE|CSE-DS,Backend Developer,6.5,7,LOW,Bengaluru|Hyderabad
+TCS,CSE|CSE-DS,Backend Developer,6.0,6,LOW,Bengaluru|Chennai
+Wipro,CSE|CSE-DS,Frontend Developer,6.0,6,LOW,Bengaluru|Pune
+Cognizant,CSE|CSE-DS,Backend Developer,6.5,7,LOW,Chennai
+Accenture,CSE|CSE-DS,Full Stack Developer,7.0,9,MID,Bengaluru
+Capgemini,CSE|CSE-DS,Full Stack Developer,6.5,7,LOW,Mumbai
+Zoho,CSE|CSE-DS,Backend Developer,7.0,8,MID,Chennai
+Freshworks,CSE|CSE-DS,Frontend Developer,7.0,8,MID,Chennai
+Paytm,CSE|CSE-DS,Backend Developer,7.5,10,MID,Noida
+PhonePe,CSE|CSE-DS,Backend Developer,7.5,12,HIGH,Bengaluru
+Flipkart,CSE|CSE-DS,Backend Developer,7.5,12,HIGH,Bengaluru
+Meesho,CSE|CSE-DS,Backend Developer,7.0,10,MID,Bengaluru
+Swiggy,CSE|CSE-DS,Backend Developer,7.0,11,MID,Bengaluru
+Zomato,CSE|CSE-DS,Backend Developer,7.0,10,MID,Gurgaon
+Razorpay,CSE|CSE-DS,Backend Developer,7.5,14,HIGH,Bengaluru
+Groww,CSE|CSE-DS,Backend Developer,7.5,12,HIGH,Bengaluru
+Upstox,CSE|CSE-DS,Backend Developer,7.5,12,HIGH,Mumbai
+BrowserStack,CSE|CSE-DS,Full Stack Developer,7.5,15,HIGH,Mumbai
+InMobi,CSE|CSE-DS,Data Scientist,7.5,14,HIGH,Bengaluru
+Fractal Analytics,CSE-DS|AIDS,Data Scientist,7.0,10,MID,Bengaluru
+Tiger Analytics,CSE-DS|AIDS,Data Analyst,7.0,9,MID,Bengaluru
+Mu Sigma,CSE-DS|AIDS,Data Analyst,6.5,7,LOW,Bengaluru
+LatentView,CSE-DS|AIDS,Data Analyst,7.0,8,MID,Chennai
+Tredence,CSE-DS|AIDS,Data Scientist,7.0,9,MID,Bengaluru
+Quantiphi,AIML,ML Engineer,7.5,12,HIGH,Bengaluru
+Haptik,AIML,ML Engineer,7.0,10,MID,Mumbai
+Arya.ai,AIML,ML Engineer,7.0,10,MID,Mumbai
+SigTuple,AIML,ML Engineer,7.5,12,HIGH,Bengaluru
+Uniphore,AIML,ML Engineer,7.0,10,MID,Chennai
+Postman,CSE,Backend Developer,7.5,15,HIGH,Bengaluru
+Chargebee,CSE,Backend Developer,7.5,12,HIGH,Chennai
+
+Bosch,ECE|MECH,Embedded Engineer,7.0,10,MID,Bengaluru
+Siemens,ECE|EEE,Embedded Engineer,7.0,9,MID,Bengaluru
+Texas Instruments,ECE,Embedded Engineer,7.5,12,HIGH,Bengaluru
+Qualcomm,ECE,Embedded Engineer,7.5,14,HIGH,Bengaluru
+Samsung R&D,ECE,Embedded Engineer,7.0,10,MID,Bengaluru
+Intel,ECE,Embedded Engineer,7.5,14,HIGH,Bengaluru
+ABB,EEE,Power Engineer,6.5,8,MID,Bengaluru
+Schneider Electric,EEE,Power Engineer,6.5,8,MID,Gurgaon
+GE Power,EEE,Power Engineer,7.0,9,MID,Noida
+L&T Electrical,EEE,Power Engineer,6.5,7,LOW,Mumbai
+Tata Motors,MECH,Automobile Engineer,6.5,7,LOW,Pune
+Mahindra,MECH,Automobile Engineer,6.5,7,LOW,Chennai
+Ashok Leyland,MECH,Automobile Engineer,6.0,6,LOW,Chennai
+TVS Motors,MECH,Automobile Engineer,6.5,6,LOW,Hosur
+Hero MotoCorp,MECH,Automobile Engineer,6.0,6,LOW,Gurgaon
+ISRO,ECE|MECH,Embedded Engineer,7.5,10,MID,Bengaluru
+DRDO,ECE|MECH,Embedded Engineer,7.0,9,MID,Hyderabad
+BEL,ECE,Embedded Engineer,7.0,8,MID,Bengaluru
+HAL,MECH,Mechanical Engineer,7.0,8,MID,Bengaluru
+BHEL,EEE|MECH,Power Engineer,6.5,7,LOW,Trichy
