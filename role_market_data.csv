@@ -1,0 +1,31 @@
+job_role,eligible_stream,required_technologies,company_name,hiring_status
+Frontend Developer,"CSE,CSE-DS,AIML","HTML,CSS,JavaScript,React,Git","Infosys","Actively Hiring"
+Frontend Developer,"CSE,CSE-DS,AIML","HTML,CSS,JavaScript,React","Zoho","Actively Hiring"
+Frontend Developer,"CSE,CSE-DS","HTML,CSS,JavaScript","TCS","Limited Openings"
+Frontend Developer,"CSE","HTML,CSS,JavaScript","Wipro","Currently Closed"
+
+Backend Developer,"CSE,CSE-DS","Python,Java,Node.js,SQL","Amazon","Actively Hiring"
+Backend Developer,"CSE,CSE-DS","Java,Spring,SQL","Infosys","Actively Hiring"
+Backend Developer,"CSE","Python,Django,PostgreSQL","Zoho","Limited Openings"
+
+Full Stack Developer,"CSE,CSE-DS","React,Node.js,SQL,Docker","Flipkart","Actively Hiring"
+Full Stack Developer,"CSE,CSE-DS","MERN Stack","Freshworks","Actively Hiring"
+
+Data Scientist,"CSE-DS,AIML,AIDS","Python,Pandas,ML,SQL","Google","Limited Openings"
+Data Scientist,"CSE-DS,AIML","Python,ML,Deep Learning","Amazon","Actively Hiring"
+Data Scientist,"CSE-DS,AIML","Python,Statistics,ML","Paytm","Actively Hiring"
+
+ML Engineer,"AIML","Python,TensorFlow,PyTorch","Microsoft","Limited Openings"
+ML Engineer,"AIML","Python,Deep Learning","Meta","Actively Hiring"
+
+Embedded Engineer,"ECE,EEE","C,C++,Embedded C,RTOS","Bosch","Actively Hiring"
+Embedded Engineer,"ECE,EEE","C,C++,Microcontrollers","Qualcomm","Limited Openings"
+
+Power Engineer,"EEE","Power Systems,PLC,SCADA","ABB","Actively Hiring"
+Power Engineer,"EEE","Electrical Design,AutoCAD","Siemens","Limited Openings"
+
+Automobile Engineer,"MECH","Automobile Design,CATIA","Tata Motors","Actively Hiring"
+Automobile Engineer,"MECH","Vehicle Systems,Manufacturing","Mahindra & Mahindra","Limited Openings"
+
+Site Engineer,"CIVIL","AutoCAD,Construction Planning","L&T","Actively Hiring"
+Site Engineer,"CIVIL","Structural Design,Estimation","Shapoorji Pallonji","Limited Openings"
