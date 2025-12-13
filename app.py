@@ -7,12 +7,31 @@ st.set_page_config(
     layout="wide"
 )
 
+# -------------------- SIDEBAR AUTO HIDE CSS --------------------
+if st.session_state.hide_sidebar:
+    st.markdown(
+        """
+        <style>
+            [data-testid="stSidebar"] {
+                display: none;
+            }
+            [data-testid="stSidebarNav"] {
+                display: none;
+            }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
 # -------------------- SESSION STATE --------------------
 if "submitted" not in st.session_state:
     st.session_state.submitted = False
 
 if "show_profile" not in st.session_state:
     st.session_state.show_profile = True
+    
+if "hide_sidebar" not in st.session_state:
+    st.session_state.hide_sidebar = False
 
 # -------------------- LOAD DATA --------------------
 df = pd.read_csv("company.csv")
@@ -46,8 +65,22 @@ ROLE_CORE_SKILLS = {
 # -------------------- SIDEBAR --------------------
 st.sidebar.markdown("## 👤 Student Profile")
 
-if st.sidebar.button("👤 Student Profile"):
-    st.session_state.show_profile = not st.session_state.show_profile
+# -------------------- HEADER WITH RIGHT-SIDE BUTTON --------------------
+col1, col2 = st.columns([8, 2])
+
+with col1:
+    st.markdown(
+        """
+        <h1>🎓 AI Career Recommendation System</h1>
+        <p>Department-aware • Role-based • Skill-driven</p>
+        """,
+        unsafe_allow_html=True
+    )
+
+with col2:
+    st.markdown("<br>", unsafe_allow_html=True)
+    if st.button("👤 Student Profile"):
+        st.session_state.show_profile = not st.session_state.show_profile
 
 submit = False
 
@@ -109,6 +142,7 @@ st.markdown(
 if submit:
     st.session_state.submitted = True
     st.session_state.show_profile = False
+    st.session_state.hide_sidebar = True   # 👈 THIS hides sidebar
 
 # ==================== RESULTS PAGE ====================
 if st.session_state.submitted:
@@ -161,10 +195,14 @@ if st.session_state.submitted:
 
     # -------------------- COMPANY TABLE --------------------
     st.subheader("🏢 Company Recommendations")
+    df_table = df_final[["company_name", "job_role", "company_level"]].copy()
+    df_table.insert(0, "S.No", range(1, len(df_table) + 1))
+
     st.dataframe(
-        df_final[["company_name", "job_role", "company_level"]],
-        use_container_width=True
+    df_table,
+    use_container_width=True
     )
+
 
     # -------------------- MARKET INSIGHTS --------------------
     st.markdown("## 🚀 Role-Based Market Insights")
@@ -193,3 +231,4 @@ st.markdown(
     "<p style='text-align:center;'>Built with ❤️ using Data Science & AI</p>",
     unsafe_allow_html=True
 )
+
