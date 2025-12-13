@@ -25,7 +25,7 @@ st.markdown(
         🎓 AI Career Recommendation System
     </h1>
     <p style="text-align:center;color:#475569;font-size:18px;">
-        Department-aware • Role-based • Technology-driven Career Guidance
+        Department-aware • Role-based • Realistic Career Guidance
     </p>
     """,
     unsafe_allow_html=True
@@ -42,16 +42,15 @@ department = st.sidebar.selectbox(
     ["CSE", "CSE-DS", "AIML", "AIDS", "ECE", "EEE", "MECH", "CIVIL"]
 )
 
-# Department → Role mapping
 dept_role_map = {
     "CSE": ["Frontend Developer", "Backend Developer", "Full Stack Developer"],
-    "CSE-DS": ["Data Scientist", "Backend Developer", "Full Stack Developer"],
-    "AIML": ["ML Engineer", "Data Scientist"],
-    "AIDS": ["Data Scientist"],
+    "CSE-DS": ["Backend Developer", "Data Analyst", "Data Scientist"],
+    "AIML": ["Data Scientist", "ML Engineer"],
+    "AIDS": ["Data Analyst", "Data Scientist"],
     "ECE": ["Embedded Engineer"],
     "EEE": ["Power Engineer", "Embedded Engineer"],
-    "MECH": ["Automobile Engineer"],
-    "CIVIL": ["Site Engineer"]
+    "MECH": ["Automobile Engineer", "Mechanical Design Engineer"],
+    "CIVIL": ["Site Engineer", "Planning Engineer"]
 }
 
 job_role = st.sidebar.selectbox(
@@ -76,79 +75,70 @@ if recommend_btn:
     # -----------------------------
     st.subheader("👤 Profile Summary")
     st.write(f"""
-    - **Department:** {department}  
-    - **Role Interested:** {job_role}  
-    - **CGPA:** {cgpa}  
-    - **Coding Skill:** {coding_level}  
-    - **Core Skill:** {core_skill_level}  
-    - **Internship:** {internship}
+    • **Department:** {department}  
+    • **Role Interested:** {job_role}  
+    • **CGPA:** {cgpa}  
+    • **Coding Skill:** {coding_level}  
+    • **Core Skill:** {core_skill_level}  
+    • **Internship:** {internship}
     """)
     st.divider()
 
     # -----------------------------
-    # USER STRENGTH CALCULATION
+    # USER LEVEL (ONLY FOR FILTERING)
     # -----------------------------
     level_map = {"Low": 1, "Medium": 2, "High": 3}
 
     user_strength = (
-        (cgpa / 10) * 0.4 +
+        (cgpa / 10) * 0.5 +
         (level_map[coding_level] / 3) * 0.3 +
-        (level_map[core_skill_level] / 3) * 0.2 +
-        (1 if internship == "Yes" else 0) * 0.1
+        (1 if internship == "Yes" else 0) * 0.2
     )
 
     if user_strength < 0.45:
         user_level = "LOW"
-        st.warning("🔰 Beginner Profile – Startups & entry-level companies")
+        st.warning("🔰 Beginner Profile – Entry-level companies shown")
     elif user_strength < 0.7:
         user_level = "MEDIUM"
-        st.info("⚡ Intermediate Profile – Growth-focused companies")
+        st.info("⚡ Intermediate Profile – Growth-focused companies shown")
     else:
         user_level = "HIGH"
         st.success("🚀 Advanced Profile – Eligible for top companies")
 
     # -------------------------------------------------
-    # COMPANY RECOMMENDATION (GENERAL)
+    # COMPANY RECOMMENDATIONS (CLEAN & REALISTIC)
     # -------------------------------------------------
     st.subheader("🏢 Company Recommendations")
 
-    df_dept = company_df[
-        company_df["eligible_departments"].str.contains(department)
+    df_filtered = company_df[
+        company_df["eligible_departments"].str.contains(department) &
+        (company_df["job_role"] == job_role) &
+        (company_df["min_cgpa"] <= cgpa)
     ].copy()
 
     if user_level == "LOW":
-        df_dept = df_dept[df_dept["company_level"] == "LOW"]
+        df_filtered = df_filtered[df_filtered["company_level"] == "LOW"]
     elif user_level == "MEDIUM":
-        df_dept = df_dept[df_dept["company_level"].isin(["LOW", "MID"])]
+        df_filtered = df_filtered[df_filtered["company_level"].isin(["LOW", "MID"])]
 
-    df_dept["coding_num"] = df_dept["coding_level"].map(level_map)
-    df_dept["core_num"] = df_dept["core_skill_level"].map(level_map)
-    df_dept["intern_num"] = df_dept["internship_required"].map({"No": 0, "Yes": 1})
+    if df_filtered.empty:
+        st.warning("No companies found matching your profile.")
+    else:
+        top_companies = df_filtered.sort_values(
+            "package_lpa", ascending=False
+        ).head(5)
 
-    df_dept["match_score"] = (
-        (df_dept["min_cgpa"] / 10) * 0.35 +
-        (df_dept["coding_num"] / 3) * 0.30 +
-        (df_dept["core_num"] / 3) * 0.20 +
-        (df_dept["intern_num"]) * 0.15
-    )
-
-    df_dept["match_percentage"] = (df_dept["match_score"] * 100).round(2)
-
-    top_companies = df_dept.sort_values(
-        "match_score", ascending=False
-    ).head(5)
-
-    st.dataframe(
-        top_companies[
-            ["company_name", "match_percentage", "package_lpa", "company_level"]
-        ],
-        use_container_width=True
-    )
+        st.dataframe(
+            top_companies[
+                ["company_name", "job_role", "package_lpa", "company_level"]
+            ],
+            use_container_width=True
+        )
 
     st.divider()
 
     # -------------------------------------------------
-    # ROLE-BASED MARKET INSIGHTS (KEY FEATURE)
+    # ROLE-BASED MARKET INSIGHTS
     # -------------------------------------------------
     st.subheader("🧑‍💻 Role-Based Market Insights")
 
@@ -158,7 +148,7 @@ if recommend_btn:
     ]
 
     if role_filtered.empty:
-        st.warning("No role-based data available.")
+        st.warning("No role-based market data available.")
     else:
         for _, row in role_filtered.iterrows():
             status = row["hiring_status"]
