@@ -317,7 +317,9 @@ if st.session_state.submitted:
         df_final[["company_name", "job_role", "company_level"]],
         use_container_width=True,
         hide_index=True
-    )st.markdown("## 🚀 Role-Based Market Insights")
+    )
+
+st.markdown("## 🚀 Role-Based Market Insights")
 
 for _, r in df_final.iterrows():
     st.markdown(
@@ -382,4 +384,5 @@ else:
 
 # -------------------- FOOTER --------------------
 st.markdown("<p style='text-align:center;'>Built with ❤️ using Data Science & AI</p>", unsafe_allow_html=True)
+
 
