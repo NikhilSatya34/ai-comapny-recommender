@@ -126,10 +126,14 @@ if st.session_state.show_profile:
     <h4 style="color:#38bdf8;">🛠️ Technical Skills</h4>
     </div>
     """, unsafe_allow_html=True)
-
-    tech_ratings = {}
+   
+    st.session_state.tech_ratings = {}
+    
     for skill in ROLE_TECH_SKILLS.get(role, []):
-        tech_ratings[skill] = st.sidebar.slider(skill, 1, 5, 3)
+        st.session_state.tech_ratings[skill] = st.sidebar.slider(
+            skill, 1, 5, 3
+        )
+
 
     # ---------- Core Skills ----------
     st.sidebar.markdown("""
@@ -137,10 +141,13 @@ if st.session_state.show_profile:
     <h4 style="color:#fbbf24;">🧩 Core Skills</h4>
     </div>
     """, unsafe_allow_html=True)
+    st.session_state.core_ratings = {}
 
-    core_ratings = {}
     for skill in ROLE_CORE_SKILLS.get(role, []):
-        core_ratings[skill] = st.sidebar.slider(skill, 1, 5, 3)
+        st.session_state.core_ratings[skill] = st.sidebar.slider(
+            skill, 1, 5, 3
+        )
+
 
     submit = st.sidebar.button("🔍 Get Recommendations")
 
@@ -153,8 +160,12 @@ if submit:
 # ==================== RESULTS PAGE ====================
 if st.session_state.submitted:
 
-    avg_tech = sum(tech_ratings.values()) / len(tech_ratings) if tech_ratings else 3
-    avg_core = sum(core_ratings.values()) / len(core_ratings) if core_ratings else 3
+tech_vals = st.session_state.tech_ratings.values()
+core_vals = st.session_state.core_ratings.values()
+
+avg_tech = sum(tech_vals) / len(tech_vals) if tech_vals else 3
+avg_core = sum(core_vals) / len(core_vals) if core_vals else 3
+
 
     final_score = (
         (cgpa / 10) * 0.30 +
@@ -229,3 +240,4 @@ st.markdown(
     "<p style='text-align:center;'>Built with ❤️ using Data Science & AI</p>",
     unsafe_allow_html=True
 )
+
