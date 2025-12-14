@@ -166,7 +166,10 @@ for skill in ROLE_CORE_SKILLS.get(role, []):
     )
 
 
-    submit = st.sidebar.button("🔍 Get Recommendations")
+submit = st.sidebar.button(
+    "🔍 Get Recommendations",
+    key="get_recommendations_btn"
+)
 
 if submit:
     st.session_state.submitted = True
@@ -295,6 +298,7 @@ else:
 
 # -------------------- FOOTER --------------------
 st.markdown("<p style='text-align:center;'>Built with ❤️ using Data Science & AI</p>", unsafe_allow_html=True)
+
 
 
 
