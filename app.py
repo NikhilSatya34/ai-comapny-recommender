@@ -96,9 +96,15 @@ submit = False
 
 if st.session_state.show_profile:
     st.sidebar.markdown("## 👤 Student Profile")
+    
+    st.session_state.department = st.sidebar.selectbox(
+    "Department", sorted(DEPT_ROLE_MAP.keys())
+    )
 
-    department = st.sidebar.selectbox("Department", sorted(DEPT_ROLE_MAP.keys()))
-    role = st.sidebar.selectbox("Interested Role", DEPT_ROLE_MAP[department])
+    st.session_state.role = st.sidebar.selectbox(
+    "Interested Role", DEPT_ROLE_MAP[st.session_state.department]
+    )
+
     st.session_state.cgpa = st.sidebar.slider("CGPA", 5.0, 9.5, 7.0, 0.1)
     st.session_state.internship = st.sidebar.selectbox(
     "Internship Completed?", ["Yes", "No"])
@@ -166,9 +172,9 @@ if st.session_state.submitted:
     st.info(profile_label)
 
     def get_companies(level, n):
-        return df[
-            (df.job_role == role) &
-            (df.eligible_departments.str.contains(department)) &
+        return 
+            [(df.job_role == st.session_state.role) &
+            (df.eligible_departments.str.contains(st.session_state.department))&
             (df.company_level == level) &
             (df.min_cgpa <= st.session_state.cgpa)
         ].head(n)
@@ -220,6 +226,7 @@ else:
 # -------------------- FOOTER --------------------
 st.markdown("<p style='text-align:center;'>Built with ❤️ using Data Science & AI</p>",
             unsafe_allow_html=True)
+
 
 
 
