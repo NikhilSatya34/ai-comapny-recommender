@@ -168,7 +168,7 @@ if st.session_state.submitted:
             (df.job_role == role) &
             (df.eligible_departments.str.contains(department)) &
             (df.company_level == level) &
-            (df.min_cgpa <= cgpa)
+            (df.min_cgpa <= st.session_state.cgpa)
         ].head(n)
 
     if profile_label.startswith("🔵"):
@@ -218,4 +218,5 @@ else:
 # -------------------- FOOTER --------------------
 st.markdown("<p style='text-align:center;'>Built with ❤️ using Data Science & AI</p>",
             unsafe_allow_html=True)
+
 
