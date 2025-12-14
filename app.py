@@ -100,7 +100,9 @@ if st.session_state.show_profile:
     department = st.sidebar.selectbox("Department", sorted(DEPT_ROLE_MAP.keys()))
     role = st.sidebar.selectbox("Interested Role", DEPT_ROLE_MAP[department])
     st.session_state.cgpa = st.sidebar.slider("CGPA", 5.0, 9.5, 7.0, 0.1)
-    internship = st.sidebar.selectbox("Internship Completed?", ["Yes", "No"])
+    st.session_state.internship = st.sidebar.selectbox(
+    "Internship Completed?", ["Yes", "No"])
+
 
     # ===== FIX 1: SKILLS BLOCK INSIDE show_profile =====
     st.sidebar.markdown("## 🧠 Skill Self-Assessment")
@@ -151,7 +153,7 @@ if st.session_state.submitted:
         (st.session_state.cgpa / 10) * 0.30 +
         (avg_tech / 5) * 0.35 +
         (avg_core / 5) * 0.25 +
-        (0.10 if internship == "Yes" else 0)
+        (0.10 if st.session_state.internship == "Yes" else 0)
     )
 
     if final_score >= 0.70:
@@ -218,5 +220,6 @@ else:
 # -------------------- FOOTER --------------------
 st.markdown("<p style='text-align:center;'>Built with ❤️ using Data Science & AI</p>",
             unsafe_allow_html=True)
+
 
 
