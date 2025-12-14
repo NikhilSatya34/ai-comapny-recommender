@@ -41,43 +41,17 @@ DEPT_ROLE_MAP = {k: sorted(v) for k, v in DEPT_ROLE_MAP.items()}
 
 # -------------------- SKILLS --------------------
 ROLE_TECH_SKILLS = {
-    "ML Engineer": ["Python", "NumPy", "Pandas", "Scikit-learn", "TensorFlow", "PyTorch"],
-    "Data Scientist": ["Python", "Statistics", "Machine Learning", "Data Visualization"],
-    "Data Analyst": ["Python", "SQL", "Excel", "Power BI", "Tableau"],
-    "AI Engineer": ["Python", "Deep Learning", "Neural Networks", "TensorFlow"],
-    "Frontend Developer": ["HTML", "CSS", "JavaScript", "React"],
+    "ML Engineer": ["Python", "NumPy", "Pandas", "Scikit-learn"],
+    "Data Analyst": ["Python", "SQL", "Excel", "Power BI"],
     "Backend Developer": ["Python", "Java", "SQL", "APIs"],
-    "Full Stack Developer": ["HTML", "CSS", "JavaScript", "Python", "SQL"],
-    "Site Engineer": ["AutoCAD", "Estimation", "Surveying", "Construction Planning"],
-    "Structural Engineer": ["AutoCAD", "STAAD Pro", "ETABS"],
-    "Planning Engineer": ["MS Project", "Primavera", "Scheduling"],
-    "Mechanical Engineer": ["AutoCAD", "SolidWorks", "Manufacturing"],
-    "Design Engineer": ["SolidWorks", "CATIA", "ANSYS"],
-    "Production Engineer": ["Quality Control", "Lean Manufacturing"],
-    "Embedded Engineer": ["C", "Embedded C", "Microcontrollers", "RTOS"],
-    "VLSI Engineer": ["Verilog", "VHDL", "FPGA"],
-    "Electrical Engineer": ["Power Systems", "MATLAB", "SCADA"],
-    "Control Systems Engineer": ["PLC", "Automation", "MATLAB"]
+    "Embedded Engineer": ["C", "Embedded C", "Microcontrollers", "RTOS"]
 }
 
 ROLE_CORE_SKILLS = {
-    "ML Engineer": ["Problem Solving", "Analytical Thinking"],
-    "Data Scientist": ["Critical Thinking", "Research Mindset"],
-    "Data Analyst": ["Attention to Detail", "Analytical Thinking"],
-    "AI Engineer": ["Logical Reasoning"],
-    "Frontend Developer": ["Creativity", "UI Thinking"],
+    "ML Engineer": ["Problem Solving"],
+    "Data Analyst": ["Analytical Thinking"],
     "Backend Developer": ["Logic Building", "Debugging"],
-    "Full Stack Developer": ["System Thinking"],
-    "Site Engineer": ["Planning", "Execution", "Safety Awareness"],
-    "Structural Engineer": ["Attention to Detail"],
-    "Planning Engineer": ["Time Management"],
-    "Mechanical Engineer": ["Problem Solving"],
-    "Design Engineer": ["Creativity"],
-    "Production Engineer": ["Process Optimization"],
-    "Embedded Engineer": ["Debugging", "Hardware Understanding"],
-    "VLSI Engineer": ["Analytical Thinking"],
-    "Electrical Engineer": ["Troubleshooting", "Safety Awareness"],
-    "Control Systems Engineer": ["Precision"]
+    "Embedded Engineer": ["Hardware Understanding"]
 }
 
 # -------------------- HEADER --------------------
@@ -85,7 +59,6 @@ c1, c2 = st.columns([8, 2])
 with c1:
     st.markdown("<h1>🎓 AI Career Recommendation System</h1>", unsafe_allow_html=True)
 with c2:
-    st.markdown("<br>", unsafe_allow_html=True)
     if st.button("👤 Student Profile"):
         st.session_state.show_profile = True
         st.session_state.hide_sidebar = False
@@ -95,48 +68,30 @@ with c2:
 submit = False
 
 if st.session_state.show_profile:
-    
     st.sidebar.markdown("## 👤 Student Profile")
-    
+
     st.session_state.department = st.sidebar.selectbox(
-    "Department", sorted(DEPT_ROLE_MAP.keys())
+        "Department", sorted(DEPT_ROLE_MAP.keys())
     )
-
     st.session_state.role = st.sidebar.selectbox(
-    "Interested Role", DEPT_ROLE_MAP[st.session_state.department]
+        "Interested Role", DEPT_ROLE_MAP[st.session_state.department]
     )
-
     st.session_state.cgpa = st.sidebar.slider("CGPA", 5.0, 9.5, 7.0, 0.1)
     st.session_state.internship = st.sidebar.selectbox(
-    "Internship Completed?", ["Yes", "No"])
+        "Internship Completed?", ["Yes", "No"]
+    )
 
-
-    # ===== FIX 1: SKILLS BLOCK INSIDE show_profile =====
     st.sidebar.markdown("## 🧠 Skill Self-Assessment")
 
-    st.sidebar.markdown("""
-    <div style="background:#0f172a;padding:12px;border-radius:12px;
-                border-left:4px solid #38bdf8;margin-bottom:10px;">
-    <h4 style="color:#38bdf8;">🛠️ Technical Skills</h4>
-    </div>
-    """, unsafe_allow_html=True)
-
     st.session_state.tech_ratings = {}
-    for skill in ROLE_TECH_SKILLS.get(role, []):
+    for skill in ROLE_TECH_SKILLS.get(st.session_state.role, []):
         st.session_state.tech_ratings[skill] = st.sidebar.slider(skill, 1, 5, 3)
 
-    st.sidebar.markdown("""
-    <div style="background:#0f172a;padding:12px;border-radius:12px;
-                border-left:4px solid #fbbf24;margin-top:12px;">
-    <h4 style="color:#fbbf24;">🧩 Core Skills</h4>
-    </div>
-    """, unsafe_allow_html=True)
-
     st.session_state.core_ratings = {}
-    for skill in ROLE_CORE_SKILLS.get(role, []):
+    for skill in ROLE_CORE_SKILLS.get(st.session_state.role, []):
         st.session_state.core_ratings[skill] = st.sidebar.slider(skill, 1, 5, 3)
 
-    submit = st.sidebar.button("🔍 Get Recommendations", key="get_recommendations_btn")
+    submit = st.sidebar.button("🔍 Get Recommendations")
 
 if submit:
     st.session_state.submitted = True
@@ -144,8 +99,6 @@ if submit:
     st.session_state.hide_sidebar = True
 
 # ==================== RESULTS ====================
-
-# ===== FIX 2: df_final INITIALIZED =====
 df_final = pd.DataFrame()
 
 if st.session_state.submitted:
@@ -172,13 +125,13 @@ if st.session_state.submitted:
 
     st.info(profile_label)
 
-def get_companies(level, n):
-    return df[
-        (df.job_role == st.session_state.role) &
-        (df.eligible_departments.str.contains(st.session_state.department)) &
-        (df.company_level == level) &
-        (df.min_cgpa <= st.session_state.cgpa)
-    ].head(n)
+    def get_companies(level, n):
+        return df[
+            (df.job_role == st.session_state.role) &
+            (df.eligible_departments.str.contains(st.session_state.department)) &
+            (df.company_level == level) &
+            (df.min_cgpa <= st.session_state.cgpa)
+        ].head(n)
 
     if profile_label.startswith("🔵"):
         df_final = pd.concat([
@@ -204,27 +157,16 @@ def get_companies(level, n):
         hide_index=True
     )
 
-    # ===== FIX 3: MARKET INSIGHTS INSIDE submitted =====if st.session_state.submitted:
-
-    st.subheader("🏢 Company Recommendations")
-    st.dataframe(
-        df_final[["company_name", "job_role", "company_level"]],
-        use_container_width=True,
-        hide_index=True
-    )
-
-    # ==== FIX 3: MARKET INSIGHTS INSIDE submitted ====
     st.markdown("## 🚀 Role-Based Market Insights")
-
     for _, r in df_final.iterrows():
         st.markdown(
             f"""
             <div style="background:#020617;border:1px solid #1e293b;
-                        border-radius:16px;padding:18px;margin-bottom:18px;">
-                <h3 style="color:#e5e7eb;">🏢 {r.company_name}</h3>
-                <p>👨‍💻 <b>Role:</b> {r.job_role}</p>
-                <p>⭐ <b>Level:</b> {r.company_level}</p>
-                <p>📍 <b>Locations:</b> {r.company_locations}</p>
+                        border-radius:12px;padding:14px;margin-bottom:12px;">
+                <b>{r.company_name}</b><br>
+                Role: {r.job_role}<br>
+                Level: {r.company_level}<br>
+                Locations: {r.company_locations}
             </div>
             """,
             unsafe_allow_html=True
@@ -233,14 +175,8 @@ def get_companies(level, n):
 else:
     st.info("👉 Fill profile and click Get Recommendations")
 
-
 # -------------------- FOOTER --------------------
-st.markdown("<p style='text-align:center;'>Built with ❤️ using Data Science & AI</p>",
-            unsafe_allow_html=True)
-
-
-
-
-
-
-
+st.markdown(
+    "<p style='text-align:center;'>Built with ❤️ using Data Science & AI</p>",
+    unsafe_allow_html=True
+)
