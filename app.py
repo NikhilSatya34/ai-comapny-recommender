@@ -10,24 +10,19 @@ st.set_page_config(
 # -------------------- SESSION STATE --------------------
 if "submitted" not in st.session_state:
     st.session_state.submitted = False
-
 if "show_profile" not in st.session_state:
     st.session_state.show_profile = True
-
 if "hide_sidebar" not in st.session_state:
     st.session_state.hide_sidebar = False
 
-# -------------------- SIDEBAR AUTO HIDE CSS --------------------
+# -------------------- SIDEBAR AUTO-HIDE CSS --------------------
 if st.session_state.hide_sidebar:
     st.markdown(
         """
         <style>
-            [data-testid="stSidebar"] {
-                display: none;
-            }
-            [data-testid="stSidebarNav"] {
-                display: none;
-            }
+        [data-testid="stSidebar"], [data-testid="stSidebarNav"] {
+            display: none;
+        }
         </style>
         """,
         unsafe_allow_html=True
@@ -43,23 +38,41 @@ for _, row in df.iterrows():
         DEPT_ROLE_MAP.setdefault(dept, set()).add(row["job_role"])
 DEPT_ROLE_MAP = {k: sorted(v) for k, v in DEPT_ROLE_MAP.items()}
 
-# -------------------- ROLE → SKILLS MAP --------------------
+# -------------------- ROLE → SKILLS MAP (FINAL) --------------------
 ROLE_TECH_SKILLS = {
-    "ML Engineer": ["Python", "TensorFlow", "PyTorch"],
+    # CSE / AIML
+    "ML Engineer": ["Python", "TensorFlow", "PyTorch", "Pandas"],
     "Frontend Developer": ["HTML", "CSS", "JavaScript", "React"],
     "Backend Developer": ["Python", "Java", "SQL", "APIs"],
-    "Full Stack Developer": ["HTML", "CSS", "JavaScript", "Python"],
-    "Embedded Engineer": ["C", "Embedded C", "Microcontrollers"],
-    "Mechanical Engineer": ["AutoCAD", "SolidWorks", "Manufacturing"]
+    "Full Stack Developer": ["HTML", "CSS", "JavaScript", "Python", "SQL"],
+
+    # CIVIL
+    "Site Engineer": ["AutoCAD", "Estimation", "Surveying", "Construction Planning"],
+    "Structural Engineer": ["STAAD Pro", "ETABS", "AutoCAD"],
+
+    # MECH
+    "Mechanical Engineer": ["AutoCAD", "SolidWorks", "Manufacturing"],
+
+    # ECE / EEE
+    "Embedded Engineer": ["C", "Embedded C", "Microcontrollers"]
 }
 
 ROLE_CORE_SKILLS = {
+    # CSE / AIML
     "ML Engineer": ["Math", "Problem Solving", "Model Optimization"],
     "Frontend Developer": ["Creativity", "Problem Solving"],
-    "Backend Developer": ["Logic Building"],
-    "Full Stack Developer": ["System Thinking"],
-    "Embedded Engineer": ["Debugging"],
-    "Mechanical Engineer": ["Problem Solving", "Design Thinking"]
+    "Backend Developer": ["Logic Building", "Debugging"],
+    "Full Stack Developer": ["System Thinking", "Problem Solving"],
+
+    # CIVIL
+    "Site Engineer": ["Planning", "Execution", "Safety Awareness"],
+    "Structural Engineer": ["Analytical Thinking", "Attention to Detail"],
+
+    # MECH
+    "Mechanical Engineer": ["Problem Solving", "Design Thinking"],
+
+    # ECE / EEE
+    "Embedded Engineer": ["Debugging", "Hardware Understanding"]
 }
 
 # -------------------- HEADER WITH RIGHT BUTTON --------------------
@@ -81,7 +94,7 @@ with col2:
         st.session_state.hide_sidebar = False
         st.session_state.submitted = False
 
-# -------------------- SIDEBAR --------------------
+# -------------------- SIDEBAR INPUTS --------------------
 submit = False
 
 if st.session_state.show_profile:
@@ -140,7 +153,6 @@ if submit:
 # ==================== RESULTS PAGE ====================
 if st.session_state.submitted:
 
-    # ---- SAFE AVERAGES ----
     avg_tech = sum(tech_ratings.values()) / len(tech_ratings) if tech_ratings else 3
     avg_core = sum(core_ratings.values()) / len(core_ratings) if core_ratings else 3
 
@@ -179,13 +191,16 @@ if st.session_state.submitted:
 
     df_final = df_filtered.head(5).copy()
 
-    # -------------------- COMPANY TABLE WITH S.NO --------------------
+    # -------------------- COMPANY TABLE (NO ROW NUMBERS) --------------------
     st.subheader("🏢 Company Recommendations")
 
-    df_table = df_final[["company_name", "job_role", "company_level"]].copy()
-    df_table.insert(0, "S.No", range(1, len(df_table) + 1))
+    df_table = df_final[["company_name", "job_role", "company_level"]].reset_index(drop=True)
 
-    st.dataframe(df_table, use_container_width=True)
+    st.dataframe(
+        df_table,
+        use_container_width=True,
+        hide_index=True
+    )
 
     # -------------------- MARKET INSIGHTS --------------------
     st.markdown("## 🚀 Role-Based Market Insights")
