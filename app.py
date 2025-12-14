@@ -40,155 +40,66 @@ for _, row in df.iterrows():
 DEPT_ROLE_MAP = {k: sorted(v) for k, v in DEPT_ROLE_MAP.items()}
 
 # -------------------- SKILLS --------------------
-# -------------------- ROLE → TECHNICAL SKILLS (ALL DEPARTMENTS) --------------------
+# -------------------- ROLE → TECHNICAL SKILLS --------------------
 ROLE_TECH_SKILLS = {
 
-    # ================= CSE / AIML / AIDS =================
-    "ML Engineer": [
-        "Python", "NumPy", "Pandas", "Scikit-learn",
-        "TensorFlow", "PyTorch", "Data Preprocessing"
-    ],
-    "Data Scientist": [
-        "Python", "Pandas", "NumPy", "Machine Learning",
-        "Statistics", "Data Visualization"
-    ],
-    "Data Analyst": [
-        "Python", "SQL", "Excel", "Power BI",
-        "Tableau", "Data Cleaning"
-    ],
-    "AI Engineer": [
-        "Python", "Deep Learning", "TensorFlow",
-        "PyTorch", "Neural Networks"
-    ],
-    "Frontend Developer": [
-        "HTML", "CSS", "JavaScript", "React",
-        "Bootstrap"
-    ],
-    "Backend Developer": [
-        "Python", "Java", "SQL",
-        "REST APIs", "Django/Flask"
-    ],
-    "Full Stack Developer": [
-        "HTML", "CSS", "JavaScript",
-        "Python", "SQL", "React"
-    ],
+    # ===== CSE / AIML / AIDS =====
+    "ML Engineer": ["Python", "NumPy", "Pandas", "Scikit-learn", "TensorFlow", "PyTorch"],
+    "Data Scientist": ["Python", "Statistics", "Machine Learning", "Data Visualization"],
+    "Data Analyst": ["Python", "SQL", "Excel", "Power BI", "Tableau"],
+    "AI Engineer": ["Python", "Deep Learning", "Neural Networks", "TensorFlow"],
+    "Frontend Developer": ["HTML", "CSS", "JavaScript", "React"],
+    "Backend Developer": ["Python", "Java", "SQL", "APIs"],
+    "Full Stack Developer": ["HTML", "CSS", "JavaScript", "Python", "SQL"],
 
-    # ================= CIVIL =================
-    "Site Engineer": [
-        "AutoCAD", "Estimation",
-        "Surveying", "Construction Planning",
-        "Quantity Surveying"
-    ],
-    "Structural Engineer": [
-        "AutoCAD", "STAAD Pro",
-        "ETABS", "Structural Analysis"
-    ],
-    "Planning Engineer": [
-        "MS Project", "Primavera",
-        "Scheduling", "Resource Planning"
-    ],
+    # ===== CIVIL =====
+    "Site Engineer": ["AutoCAD", "Estimation", "Surveying", "Construction Planning"],
+    "Structural Engineer": ["AutoCAD", "STAAD Pro", "ETABS"],
+    "Planning Engineer": ["MS Project", "Primavera", "Scheduling"],
 
-    # ================= MECHANICAL =================
-    "Mechanical Engineer": [
-        "AutoCAD", "SolidWorks",
-        "CATIA", "Manufacturing Processes"
-    ],
-    "Design Engineer": [
-        "SolidWorks", "CATIA",
-        "ANSYS", "Product Design"
-    ],
-    "Production Engineer": [
-        "Production Planning",
-        "Quality Control", "Lean Manufacturing"
-    ],
+    # ===== MECHANICAL =====
+    "Mechanical Engineer": ["AutoCAD", "SolidWorks", "Manufacturing"],
+    "Design Engineer": ["SolidWorks", "CATIA", "ANSYS"],
+    "Production Engineer": ["Quality Control", "Lean Manufacturing"],
 
-    # ================= ECE =================
-    "Embedded Engineer": [
-        "C", "Embedded C",
-        "Microcontrollers", "RTOS"
-    ],
-    "VLSI Engineer": [
-        "Verilog", "VHDL",
-        "ASIC Design", "FPGA"
-    ],
+    # ===== ECE =====
+    "Embedded Engineer": ["C", "Embedded C", "Microcontrollers", "RTOS"],
+    "VLSI Engineer": ["Verilog", "VHDL", "FPGA"],
 
-    # ================= EEE =================
-    "Electrical Engineer": [
-        "Power Systems", "Electrical Machines",
-        "MATLAB", "SCADA"
-    ],
-    "Control Systems Engineer": [
-        "MATLAB", "PLC",
-        "Automation", "Control Theory"
-    ]
+    # ===== EEE =====
+    "Electrical Engineer": ["Power Systems", "MATLAB", "SCADA"],
+    "Control Systems Engineer": ["PLC", "Automation", "MATLAB"]
 }
 
-# -------------------- ROLE → CORE SKILLS (ALL DEPARTMENTS) --------------------
+# -------------------- ROLE → CORE SKILLS --------------------
 ROLE_CORE_SKILLS = {
 
     # CSE / AIML / AIDS
-    "ML Engineer": [
-        "Problem Solving", "Analytical Thinking",
-        "Model Optimization"
-    ],
-    "Data Scientist": [
-        "Critical Thinking", "Problem Solving"
-    ],
-    "Data Analyst": [
-        "Analytical Thinking", "Attention to Detail"
-    ],
-    "AI Engineer": [
-        "Logical Reasoning", "Research Mindset"
-    ],
-    "Frontend Developer": [
-        "Creativity", "UI Thinking"
-    ],
-    "Backend Developer": [
-        "Logic Building", "Debugging"
-    ],
-    "Full Stack Developer": [
-        "System Thinking", "Problem Solving"
-    ],
+    "ML Engineer": ["Problem Solving", "Analytical Thinking"],
+    "Data Scientist": ["Critical Thinking", "Research Mindset"],
+    "Data Analyst": ["Attention to Detail", "Analytical Thinking"],
+    "AI Engineer": ["Logical Reasoning"],
+    "Frontend Developer": ["Creativity", "UI Thinking"],
+    "Backend Developer": ["Logic Building", "Debugging"],
+    "Full Stack Developer": ["System Thinking"],
 
     # CIVIL
-    "Site Engineer": [
-        "Planning", "Execution",
-        "Safety Awareness"
-    ],
-    "Structural Engineer": [
-        "Analytical Thinking",
-        "Attention to Detail"
-    ],
-    "Planning Engineer": [
-        "Time Management", "Coordination"
-    ],
+    "Site Engineer": ["Planning", "Execution", "Safety Awareness"],
+    "Structural Engineer": ["Attention to Detail"],
+    "Planning Engineer": ["Time Management"],
 
-    # MECHANICAL
-    "Mechanical Engineer": [
-        "Design Thinking", "Problem Solving"
-    ],
-    "Design Engineer": [
-        "Creativity", "Precision"
-    ],
-    "Production Engineer": [
-        "Process Optimization", "Quality Focus"
-    ],
+    # MECH
+    "Mechanical Engineer": ["Problem Solving"],
+    "Design Engineer": ["Creativity"],
+    "Production Engineer": ["Process Optimization"],
 
     # ECE
-    "Embedded Engineer": [
-        "Debugging", "Hardware Understanding"
-    ],
-    "VLSI Engineer": [
-        "Analytical Thinking", "Patience"
-    ],
+    "Embedded Engineer": ["Debugging", "Hardware Understanding"],
+    "VLSI Engineer": ["Analytical Thinking"],
 
     # EEE
-    "Electrical Engineer": [
-        "Troubleshooting", "Safety Awareness"
-    ],
-    "Control Systems Engineer": [
-        "Logical Thinking", "Precision"
-    ]
+    "Electrical Engineer": ["Troubleshooting", "Safety Awareness"],
+    "Control Systems Engineer": ["Precision"]
 }
 
 
@@ -384,5 +295,6 @@ else:
 
 # -------------------- FOOTER --------------------
 st.markdown("<p style='text-align:center;'>Built with ❤️ using Data Science & AI</p>", unsafe_allow_html=True)
+
 
 
