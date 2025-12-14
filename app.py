@@ -40,10 +40,7 @@ for _, row in df.iterrows():
 DEPT_ROLE_MAP = {k: sorted(v) for k, v in DEPT_ROLE_MAP.items()}
 
 # -------------------- SKILLS --------------------
-# -------------------- ROLE → TECHNICAL SKILLS --------------------
 ROLE_TECH_SKILLS = {
-
-    # ===== CSE / AIML / AIDS =====
     "ML Engineer": ["Python", "NumPy", "Pandas", "Scikit-learn", "TensorFlow", "PyTorch"],
     "Data Scientist": ["Python", "Statistics", "Machine Learning", "Data Visualization"],
     "Data Analyst": ["Python", "SQL", "Excel", "Power BI", "Tableau"],
@@ -51,30 +48,19 @@ ROLE_TECH_SKILLS = {
     "Frontend Developer": ["HTML", "CSS", "JavaScript", "React"],
     "Backend Developer": ["Python", "Java", "SQL", "APIs"],
     "Full Stack Developer": ["HTML", "CSS", "JavaScript", "Python", "SQL"],
-
-    # ===== CIVIL =====
     "Site Engineer": ["AutoCAD", "Estimation", "Surveying", "Construction Planning"],
     "Structural Engineer": ["AutoCAD", "STAAD Pro", "ETABS"],
     "Planning Engineer": ["MS Project", "Primavera", "Scheduling"],
-
-    # ===== MECHANICAL =====
     "Mechanical Engineer": ["AutoCAD", "SolidWorks", "Manufacturing"],
     "Design Engineer": ["SolidWorks", "CATIA", "ANSYS"],
     "Production Engineer": ["Quality Control", "Lean Manufacturing"],
-
-    # ===== ECE =====
     "Embedded Engineer": ["C", "Embedded C", "Microcontrollers", "RTOS"],
     "VLSI Engineer": ["Verilog", "VHDL", "FPGA"],
-
-    # ===== EEE =====
     "Electrical Engineer": ["Power Systems", "MATLAB", "SCADA"],
     "Control Systems Engineer": ["PLC", "Automation", "MATLAB"]
 }
 
-# -------------------- ROLE → CORE SKILLS --------------------
 ROLE_CORE_SKILLS = {
-
-    # CSE / AIML / AIDS
     "ML Engineer": ["Problem Solving", "Analytical Thinking"],
     "Data Scientist": ["Critical Thinking", "Research Mindset"],
     "Data Analyst": ["Attention to Detail", "Analytical Thinking"],
@@ -82,26 +68,17 @@ ROLE_CORE_SKILLS = {
     "Frontend Developer": ["Creativity", "UI Thinking"],
     "Backend Developer": ["Logic Building", "Debugging"],
     "Full Stack Developer": ["System Thinking"],
-
-    # CIVIL
     "Site Engineer": ["Planning", "Execution", "Safety Awareness"],
     "Structural Engineer": ["Attention to Detail"],
     "Planning Engineer": ["Time Management"],
-
-    # MECH
     "Mechanical Engineer": ["Problem Solving"],
     "Design Engineer": ["Creativity"],
     "Production Engineer": ["Process Optimization"],
-
-    # ECE
     "Embedded Engineer": ["Debugging", "Hardware Understanding"],
     "VLSI Engineer": ["Analytical Thinking"],
-
-    # EEE
     "Electrical Engineer": ["Troubleshooting", "Safety Awareness"],
     "Control Systems Engineer": ["Precision"]
 }
-
 
 # -------------------- HEADER --------------------
 c1, c2 = st.columns([8, 2])
@@ -116,6 +93,7 @@ with c2:
 
 # -------------------- SIDEBAR --------------------
 submit = False
+
 if st.session_state.show_profile:
     st.sidebar.markdown("## 👤 Student Profile")
 
@@ -123,53 +101,33 @@ if st.session_state.show_profile:
     role = st.sidebar.selectbox("Interested Role", DEPT_ROLE_MAP[department])
     cgpa = st.sidebar.slider("CGPA", 5.0, 9.5, 7.0, 0.1)
     internship = st.sidebar.selectbox("Internship Completed?", ["Yes", "No"])
-st.sidebar.markdown("## 🧠 Skill Self-Assessment")
 
-# ================= TECHNICAL SKILLS BLOCK =================
-st.sidebar.markdown("""
-<div style="
-    background:#0f172a;
-    padding:12px;
-    border-radius:12px;
-    border-left:4px solid #38bdf8;
-    margin-bottom:10px;
-">
-<h4 style="color:#38bdf8;">🛠️ Technical Skills</h4>
-</div>
-""", unsafe_allow_html=True)
+    # ===== FIX 1: SKILLS BLOCK INSIDE show_profile =====
+    st.sidebar.markdown("## 🧠 Skill Self-Assessment")
 
-st.session_state.tech_ratings = {}
+    st.sidebar.markdown("""
+    <div style="background:#0f172a;padding:12px;border-radius:12px;
+                border-left:4px solid #38bdf8;margin-bottom:10px;">
+    <h4 style="color:#38bdf8;">🛠️ Technical Skills</h4>
+    </div>
+    """, unsafe_allow_html=True)
 
-for skill in ROLE_TECH_SKILLS.get(role, []):
-    st.session_state.tech_ratings[skill] = st.sidebar.slider(
-        skill, 1, 5, 3
-    )
+    st.session_state.tech_ratings = {}
+    for skill in ROLE_TECH_SKILLS.get(role, []):
+        st.session_state.tech_ratings[skill] = st.sidebar.slider(skill, 1, 5, 3)
 
-# ================= CORE SKILLS BLOCK =================
-st.sidebar.markdown("""
-<div style="
-    background:#0f172a;
-    padding:12px;
-    border-radius:12px;
-    border-left:4px solid #fbbf24;
-    margin-top:12px;
-">
-<h4 style="color:#fbbf24;">🧩 Core Skills</h4>
-</div>
-""", unsafe_allow_html=True)
+    st.sidebar.markdown("""
+    <div style="background:#0f172a;padding:12px;border-radius:12px;
+                border-left:4px solid #fbbf24;margin-top:12px;">
+    <h4 style="color:#fbbf24;">🧩 Core Skills</h4>
+    </div>
+    """, unsafe_allow_html=True)
 
-st.session_state.core_ratings = {}
+    st.session_state.core_ratings = {}
+    for skill in ROLE_CORE_SKILLS.get(role, []):
+        st.session_state.core_ratings[skill] = st.sidebar.slider(skill, 1, 5, 3)
 
-for skill in ROLE_CORE_SKILLS.get(role, []):
-    st.session_state.core_ratings[skill] = st.sidebar.slider(
-        skill, 1, 5, 3
-    )
-
-
-submit = st.sidebar.button(
-    "🔍 Get Recommendations",
-    key="get_recommendations_btn"
-)
+    submit = st.sidebar.button("🔍 Get Recommendations", key="get_recommendations_btn")
 
 if submit:
     st.session_state.submitted = True
@@ -177,6 +135,10 @@ if submit:
     st.session_state.hide_sidebar = True
 
 # ==================== RESULTS ====================
+
+# ===== FIX 2: df_final INITIALIZED =====
+df_final = pd.DataFrame()
+
 if st.session_state.submitted:
 
     tech_vals = list(st.session_state.tech_ratings.values())
@@ -233,72 +195,26 @@ if st.session_state.submitted:
         hide_index=True
     )
 
-st.markdown("## 🚀 Role-Based Market Insights")
+    # ===== FIX 3: MARKET INSIGHTS INSIDE submitted =====
+    st.markdown("## 🚀 Role-Based Market Insights")
 
-for _, r in df_final.iterrows():
-    st.markdown(
-        f"""
-        <div style="
-            background: linear-gradient(135deg, #020617, #020617);
-            border: 1px solid #1e293b;
-            border-radius: 16px;
-            padding: 18px 20px;
-            margin-bottom: 18px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.35);
-        ">
-
-            <div style="display:flex;align-items:center;gap:12px;">
-                <div style="
-                    background:#0ea5e9;
-                    color:black;
-                    padding:10px;
-                    border-radius:12px;
-                    font-size:18px;
-                ">🏢</div>
-
-                <div>
-                    <h3 style="margin:0;color:#e5e7eb;">
-                        {r.company_name}
-                    </h3>
-                    <span style="
-                        border:1px solid #334155;
-                        padding:4px 10px;
-                        border-radius:999px;
-                        font-size:12px;
-                        color:#38bdf8;
-                    ">
-                        {r.company_level} LEVEL
-                    </span>
-                </div>
+    for _, r in df_final.iterrows():
+        st.markdown(
+            f"""
+            <div style="background:#020617;border:1px solid #1e293b;
+                        border-radius:16px;padding:18px 20px;margin-bottom:18px;">
+            <h3 style="color:#e5e7eb;">🏢 {r.company_name}</h3>
+            <p>👨‍💻 <b>Role:</b> {r.job_role}</p>
+            <p>⭐ <b>Level:</b> {r.company_level}</p>
+            <p>📍 <b>Locations:</b> {r.company_locations}</p>
             </div>
-
-            <hr style="border:0;border-top:1px solid #1e293b;margin:14px 0;">
-
-            <div style="
-                display:grid;
-                grid-template-columns:1fr 1fr;
-                gap:12px;
-                font-size:14px;
-                color:#cbd5f5;
-            ">
-                <div>👨‍💻 <b>Role:</b> {r.job_role}</div>
-                <div>🎓 <b>Stream:</b> {department}</div>
-                <div>📍 <b>Locations:</b> {r.company_locations}</div>
-                <div>🛠️ <b>Skills:</b> {", ".join(ROLE_TECH_SKILLS.get(role, []))}</div>
-            </div>
-
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
+            """,
+            unsafe_allow_html=True
+        )
 
 else:
     st.info("👈 Fill profile and click Get Recommendations")
 
 # -------------------- FOOTER --------------------
-st.markdown("<p style='text-align:center;'>Built with ❤️ using Data Science & AI</p>", unsafe_allow_html=True)
-
-
-
-
+st.markdown("<p style='text-align:center;'>Built with ❤️ using Data Science & AI</p>",
+            unsafe_allow_html=True)
