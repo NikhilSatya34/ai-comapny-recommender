@@ -197,15 +197,16 @@ if st.session_state.submitted:
     )
 
     st.markdown("## 🚀 Role-Based Market Insights")
+
     for _, r in df_final.iterrows():
         st.markdown(
             f"""
             <div style="background:#020617;border:1px solid #1e293b;
-                        border-radius:12px;padding:14px;margin-bottom:12px;">
-                <b>{r.company_name}</b><br>
-                Role: {r.job_role}<br>
-                Level: {r.company_level}<br>
-                Locations: {r.company_locations}
+                        border-radius:16px;padding:18px 20px;margin-bottom:18px;">
+            <h3 style="color:#e5e7eb;">🏢 {r.company_name}</h3>
+            <p>👨‍💻 <b>Role:</b> {r.job_role}</p>
+            <p>⭐ <b>Level:</b> {r.company_level}</p>
+            <p>📍 <b>Locations:</b> {r.company_locations}</p>
             </div>
             """,
             unsafe_allow_html=True
@@ -219,5 +220,6 @@ st.markdown(
     "<p style='text-align:center;'>Built with ❤️ using Data Science & AI</p>",
     unsafe_allow_html=True
 )
+
 
 
