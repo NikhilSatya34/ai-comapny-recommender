@@ -186,21 +186,45 @@ if st.session_state.submitted:
 
     st.info(profile_label)
 
-    # -------------------- FILTER COMPANIES --------------------
-    df_filtered = df[
+    # -------------------- PROFILE BASED COMPANY SELECTION --------------------
+
+def get_companies_by_level(level, limit):
+    return df[
         (df["job_role"] == role) &
         (df["eligible_departments"].str.contains(department)) &
-        (df["min_cgpa"] <= cgpa) &
-        (df["company_level"].isin(allowed_levels))
-    ]
+        (df["company_level"] == level) &
+        (df["min_cgpa"] <= cgpa)
+    ].head(limit)
 
-    if len(df_filtered) < 5:
-        df_filtered = df[
-            (df["job_role"] == role) &
-            (df["eligible_departments"].str.contains(department))
-        ]
 
-    df_final = df_filtered.head(5).copy()
+# 🔵 Advanced Profile → 10 companies
+if profile_label.startswith("🔵"):
+
+    df_high = get_companies_by_level("HIGH", 3)
+    df_mid  = get_companies_by_level("MID", 4)
+    df_low  = get_companies_by_level("LOW", 3)
+
+    df_final = pd.concat([df_high, df_mid, df_low])
+
+# 🟡 Intermediate Profile → 5 companies
+elif profile_label.startswith("🟡"):
+
+    df_mid = get_companies_by_level("MID", 3)
+    df_low = get_companies_by_level("LOW", 2)
+
+    df_final = pd.concat([df_mid, df_low])
+
+# 🟢 Beginner Profile → 5 companies
+else:
+    df_final = get_companies_by_level("LOW", 5)
+
+
+# Safety fallback (if no data)
+if df_final.empty:
+    df_final = df[
+        (df["job_role"] == role) &
+        (df["eligible_departments"].str.contains(department))
+    ].head(5)
 
     # -------------------- COMPANY TABLE (NO ROW NUMBERS) --------------------
     st.subheader("🏢 Company Recommendations")
@@ -240,5 +264,6 @@ st.markdown(
     "<p style='text-align:center;'>Built with ❤️ using Data Science & AI</p>",
     unsafe_allow_html=True
 )
+
 
 
