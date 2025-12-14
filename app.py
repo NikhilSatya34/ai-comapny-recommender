@@ -83,13 +83,45 @@ if st.session_state.show_profile:
 
     st.sidebar.markdown("## 🧠 Skill Self-Assessment")
 
-    st.session_state.tech_ratings = {}
-    for skill in ROLE_TECH_SKILLS.get(st.session_state.role, []):
-        st.session_state.tech_ratings[skill] = st.sidebar.slider(skill, 1, 5, 3)
+# ---------- TECHNICAL SKILLS ----------
+st.sidebar.markdown("""
+<div style="background:#0f172a;padding:12px;border-radius:12px;
+            border-left:4px solid #38bdf8;margin-bottom:10px;">
+<h4 style="color:#38bdf8;">🛠️ Technical Skills</h4>
+</div>
+""", unsafe_allow_html=True)
 
-    st.session_state.core_ratings = {}
-    for skill in ROLE_CORE_SKILLS.get(st.session_state.role, []):
-        st.session_state.core_ratings[skill] = st.sidebar.slider(skill, 1, 5, 3)
+st.session_state.tech_ratings = {}
+
+tech_skills = ROLE_TECH_SKILLS.get(st.session_state.role, [])
+
+if len(tech_skills) > 0:
+    for skill in tech_skills:
+        st.session_state.tech_ratings[skill] = st.sidebar.slider(
+            skill, 1, 5, 3, key=f"tech_{skill}"
+        )
+else:
+    st.sidebar.info("No technical skills mapped for this role")
+
+# ---------- CORE SKILLS ----------
+st.sidebar.markdown("""
+<div style="background:#0f172a;padding:12px;border-radius:12px;
+            border-left:4px solid #fbbf24;margin-top:12px;">
+<h4 style="color:#fbbf24;">🧩 Core Skills</h4>
+</div>
+""", unsafe_allow_html=True)
+
+st.session_state.core_ratings = {}
+
+core_skills = ROLE_CORE_SKILLS.get(st.session_state.role, [])
+
+if len(core_skills) > 0:
+    for skill in core_skills:
+        st.session_state.core_ratings[skill] = st.sidebar.slider(
+            skill, 1, 5, 3, key=f"core_{skill}"
+        )
+else:
+    st.sidebar.info("No core skills mapped for this role")
 
     submit = st.sidebar.button("🔍 Get Recommendations")
 
@@ -180,3 +212,4 @@ st.markdown(
     "<p style='text-align:center;'>Built with ❤️ using Data Science & AI</p>",
     unsafe_allow_html=True
 )
+
