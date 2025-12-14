@@ -119,11 +119,18 @@ if len(core_skills) > 0:
     for skill in core_skills:
         st.session_state.core_ratings[skill] = st.sidebar.slider(
             skill, 1, 5, 3, key=f"core_{skill}"
-        )
+    )
+
 else:
     st.sidebar.info("No core skills mapped for this role")
 
-    submit = st.sidebar.button("🔍 Get Recommendations")
+st.sidebar.markdown("<br>", unsafe_allow_html=True)
+
+submit = st.sidebar.button(
+    "🔍 Get Recommendations",
+    key="get_recommendations_btn"
+)
+
 
 if submit:
     st.session_state.submitted = True
@@ -212,4 +219,5 @@ st.markdown(
     "<p style='text-align:center;'>Built with ❤️ using Data Science & AI</p>",
     unsafe_allow_html=True
 )
+
 
