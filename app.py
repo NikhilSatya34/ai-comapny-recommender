@@ -172,12 +172,12 @@ if st.session_state.submitted:
     st.info(profile_label)
 
     def get_companies(level, n):
-    return df[
-        (df.job_role == st.session_state.role) &
-        (df.eligible_departments.str.contains(st.session_state.department)) &
-        (df.company_level == level) &
-        (df.min_cgpa <= st.session_state.cgpa)
-    ].head(n)
+        return df[
+            (df.job_role == st.session_state.role) &
+            (df.eligible_departments.str.contains(st.session_state.department)) &
+            (df.company_level == level) &
+            (df.min_cgpa <= st.session_state.cgpa)
+        ].head(n)
 
     if profile_label.startswith("🔵"):
         df_final = pd.concat([
@@ -226,6 +226,7 @@ else:
 # -------------------- FOOTER --------------------
 st.markdown("<p style='text-align:center;'>Built with ❤️ using Data Science & AI</p>",
             unsafe_allow_html=True)
+
 
 
 
