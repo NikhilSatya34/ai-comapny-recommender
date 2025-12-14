@@ -160,11 +160,11 @@ if submit:
 # ==================== RESULTS PAGE ====================
 if st.session_state.submitted:
 
-tech_vals = st.session_state.tech_ratings.values()
-core_vals = st.session_state.core_ratings.values()
+    tech_vals = st.session_state.tech_ratings.values()
+    core_vals = st.session_state.core_ratings.values()
 
-avg_tech = sum(tech_vals) / len(tech_vals) if tech_vals else 3
-avg_core = sum(core_vals) / len(core_vals) if core_vals else 3
+    avg_tech = sum(tech_vals) / len(tech_vals) if tech_vals else 3
+    avg_core = sum(core_vals) / len(core_vals) if core_vals else 3
 
 
     final_score = (
@@ -240,4 +240,5 @@ st.markdown(
     "<p style='text-align:center;'>Built with ❤️ using Data Science & AI</p>",
     unsafe_allow_html=True
 )
+
 
