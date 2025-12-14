@@ -95,6 +95,7 @@ with c2:
 submit = False
 
 if st.session_state.show_profile:
+    
     st.sidebar.markdown("## 👤 Student Profile")
     
     st.session_state.department = st.sidebar.selectbox(
@@ -171,13 +172,13 @@ if st.session_state.submitted:
 
     st.info(profile_label)
 
-    def get_companies(level, n):
-        return df[
-            (df.job_role == st.session_state.role) &
-            (df.eligible_departments.str.contains(st.session_state.department)) &
-            (df.company_level == level) &
-            (df.min_cgpa <= st.session_state.cgpa)
-        ].head(n)
+def get_companies(level, n):
+    return df[
+        (df.job_role == st.session_state.role) &
+        (df.eligible_departments.str.contains(st.session_state.department)) &
+        (df.company_level == level) &
+        (df.min_cgpa <= st.session_state.cgpa)
+    ].head(n)
 
     if profile_label.startswith("🔵"):
         df_final = pd.concat([
@@ -203,29 +204,40 @@ if st.session_state.submitted:
         hide_index=True
     )
 
-    # ===== FIX 3: MARKET INSIGHTS INSIDE submitted =====
+    # ===== FIX 3: MARKET INSIGHTS INSIDE submitted =====if st.session_state.submitted:
+
+    st.subheader("🏢 Company Recommendations")
+    st.dataframe(
+        df_final[["company_name", "job_role", "company_level"]],
+        use_container_width=True,
+        hide_index=True
+    )
+
+    # ==== FIX 3: MARKET INSIGHTS INSIDE submitted ====
     st.markdown("## 🚀 Role-Based Market Insights")
 
     for _, r in df_final.iterrows():
         st.markdown(
             f"""
             <div style="background:#020617;border:1px solid #1e293b;
-                        border-radius:16px;padding:18px 20px;margin-bottom:18px;">
-            <h3 style="color:#e5e7eb;">🏢 {r.company_name}</h3>
-            <p>👨‍💻 <b>Role:</b> {r.job_role}</p>
-            <p>⭐ <b>Level:</b> {r.company_level}</p>
-            <p>📍 <b>Locations:</b> {r.company_locations}</p>
+                        border-radius:16px;padding:18px;margin-bottom:18px;">
+                <h3 style="color:#e5e7eb;">🏢 {r.company_name}</h3>
+                <p>👨‍💻 <b>Role:</b> {r.job_role}</p>
+                <p>⭐ <b>Level:</b> {r.company_level}</p>
+                <p>📍 <b>Locations:</b> {r.company_locations}</p>
             </div>
             """,
             unsafe_allow_html=True
         )
 
 else:
-    st.info("👈 Fill profile and click Get Recommendations")
+    st.info("👉 Fill profile and click Get Recommendations")
+
 
 # -------------------- FOOTER --------------------
 st.markdown("<p style='text-align:center;'>Built with ❤️ using Data Science & AI</p>",
             unsafe_allow_html=True)
+
 
 
 
